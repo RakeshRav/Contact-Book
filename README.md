@@ -1,2 +1,2 @@
 # ContactsBook
-Contact Book - Cognitive Clouds
+Contact Book App
