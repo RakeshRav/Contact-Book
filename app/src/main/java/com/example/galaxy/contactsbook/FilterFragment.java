@@ -33,7 +33,7 @@ public class FilterFragment extends Fragment
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.d(position +"", "onItemClick ");
-                Toast.makeText(getActivity(),position+" Position clicked",Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(),position+" Position clicked",Toast.LENGTH_SHORT).show();
                 Log.i("Clicked","hii");
             }
         });
