@@ -76,32 +76,41 @@ public class ContactsAdapter extends BaseAdapter
             holder = (ViewHolder) view.getTag();
         }
 
-//        holder.name.setVisibility(View.GONE);
-//        holder.phNumber.setVisibility(View.GONE);
-//        holder.email.setVisibility(View.GONE);
+        holder.name.setVisibility(View.VISIBLE);
+        holder.phNumber.setVisibility(View.VISIBLE);
+        holder.email.setVisibility(View.VISIBLE);
 
+        holder.name.setText("");
+        holder.phNumber.setText("");
+        holder.email.setText("");
 
         ContentResolver contentResolver = context.getContentResolver();
 
         String str = "";
-        Cursor cursor = contentResolver.query(
+        String email = "";
+        String name ="";
+        String phNumber="";
+
+                Cursor cursor = contentResolver.query(
                 ContactsContract.CommonDataKinds.Email.CONTENT_URI, null,
                 ContactsContract.CommonDataKinds.Email.CONTACT_ID + " = ?",
                 new String[]{nListIds.get(position)}, null);
 
                 Log.i("email count", "" + cursor.getCount());
 
-                while (cursor.moveToNext()) {
+                if (cursor.moveToNext()) {
                     //to get the contact names
 //                    String name=cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
 //                    Log.e("Name :", name);
-                    String email = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
+                    email = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA));
                     Log.e("Email", email);
                     str = email;
 
+                        holder.email.setText(email);
 
-                    holder.email.setText(email);
-
+                }
+                else {
+                    holder.email.setVisibility(View.GONE);
                 }
                 cursor.close();
 
@@ -112,21 +121,40 @@ public class ContactsAdapter extends BaseAdapter
 
                 Log.i("phone count", "" + cursor1.getCount());
 
-                while (cursor1.moveToNext()) {
+                if (cursor1.moveToNext()) {
                     //to get the contact names
-                    String name=cursor1.getString(cursor1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
 
-                    holder.name.setText(name);
-                    Log.e("Name :", name);
+                     phNumber = cursor1.getString(cursor1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                    String phone = cursor1.getString(cursor1.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-                    holder.phNumber.setText(phone);
+                      holder.phNumber.setText(phNumber);
 
-                    Log.e("phone", phone);
-                    str = str+" "+phone;
+                    Log.e("phone", phNumber);
+                    str = str+" "+phNumber;
 
                 }
+                 else {
+                    holder.phNumber.setVisibility(View.GONE);
+                }
                 cursor1.close();
+
+        Cursor cursor2 = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, ContactsContract.Contacts._ID+" = ?", new String[]{nListIds.get(position)}, null);
+
+
+        if (cursor2.moveToNext())
+        {
+            name=cursor2.getString(cursor2.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+
+
+                holder.name.setText(name);
+
+            Log.e("Name :", name);
+        }
+        else
+        {
+            holder.name.setVisibility(View.GONE);
+        }
+        cursor2.close();
+
                 Log.i("Final String", str);
 
 
