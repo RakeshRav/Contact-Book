@@ -28,15 +28,16 @@ public class ContactsAdapter extends ArrayAdapter<String>
     public class ViewHolder {
         TextView description;
 
-
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         View view = convertView;
         final ViewHolder holder;
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
         if (view == null) {
             view = inflater.inflate(R.layout.single_contact_view, parent, false);
             holder = new ViewHolder();
