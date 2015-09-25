@@ -1,16 +1,28 @@
 package com.example.galaxy.contactsbook;
 
+import android.support.v7.app.ActionBar;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ActionBarActivity {
 
+    ActionBar actionBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        actionBar = getSupportActionBar();
+        actionBar.setTitle("Contacts Book");
+
+        ColorDrawable colorDrawable = new ColorDrawable();
+        colorDrawable.setColor(Color.parseColor("#2196F3"));
+
+        actionBar.setBackgroundDrawable(colorDrawable);
 
         if (savedInstanceState == null)
         {
@@ -23,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+    }
+
+    public void setActionBarTitle(String title) {
+        actionBar.setTitle(title);
     }
 
     @Override
