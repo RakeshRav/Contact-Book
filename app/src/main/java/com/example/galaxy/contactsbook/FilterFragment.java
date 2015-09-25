@@ -1,5 +1,6 @@
 package com.example.galaxy.contactsbook;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
@@ -17,11 +18,9 @@ import android.widget.GridView;
 public class FilterFragment extends Fragment
 {
 
-
     public ActionBar actionBar;
 
-
-
+    ListViewSelection mCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -46,9 +45,8 @@ public class FilterFragment extends Fragment
                 Button button = (Button)view.findViewById(R.id.button_alpha);
                 String buttonText = button.getText().toString();
 //                Log.i("button Text",buttonText);
-
-
-                        ((MainActivity) getActivity()).setActionBarTitle("Alphabet : "+buttonText);
+                ((MainActivity) getActivity()).setActionBarTitle("Alphabet : " + buttonText);
+                mCallback.changeListPosition(buttonText);
 
             }
         });
@@ -56,5 +54,20 @@ public class FilterFragment extends Fragment
         return filterView;
     }
 
+    public interface ListViewSelection
+    {
+        public void changeListPosition(String letter);
+    }
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mCallback = (ListViewSelection) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ListViewSelection");
+        }
+    }
 }

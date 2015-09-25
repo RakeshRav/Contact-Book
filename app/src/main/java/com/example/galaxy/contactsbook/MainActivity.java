@@ -8,7 +8,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements FilterFragment.ListViewSelection {
 
     ActionBar actionBar;
     @Override
@@ -61,5 +61,15 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void changeListPosition(String letter) {
+        ContactsFragment contactsFragment = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.contactsFragment);
+
+        if (contactsFragment !=null)
+        {
+            contactsFragment.changePosition(letter);
+        }
     }
 }

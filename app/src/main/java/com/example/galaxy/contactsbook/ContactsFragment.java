@@ -22,6 +22,9 @@ public class ContactsFragment extends Fragment
 
     ArrayList<String> contact_ids;
 
+    ListView listView;
+    int count = 0;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,15 +33,52 @@ public class ContactsFragment extends Fragment
 
         contact_ids = getIds();
 
-        for (int i = 0; i<contact_ids.size() ; i++ )
-        {
-            Log.i("ID ","id "+contact_ids.get(i));
-        }
+//        for (int i = 0; i<contact_ids.size() ; i++ )
+//        {
+//            Log.i("ID ","id "+contact_ids.get(i));
+//        }
 
         ContactsAdapter adapter = new ContactsAdapter(getActivity(),contact_ids);
-        ListView listView = (ListView) contactsView.findViewById(R.id.contactList);
+        listView = (ListView) contactsView.findViewById(R.id.contactList);
         listView.setAdapter(adapter);
+
+
         return contactsView;
+    }
+
+    public void changePosition(String letter)
+    {
+
+        String letterLower = letter.toLowerCase();
+
+
+        ContentResolver contentResolver = getActivity().getContentResolver();
+        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
+                null,
+                null,
+                null,
+                ContactsContract.Contacts.DISPLAY_NAME_PRIMARY+" COLLATE NOCASE");
+
+        if (cursor.getCount() > 0)
+        {
+            while (cursor.moveToNext())
+            {
+                String name = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME_PRIMARY));
+                Log.i("name",name);
+                if (name.startsWith(letter) || name.startsWith(letterLower))
+                {
+                    Log.i("name","match");
+                    break;
+                }
+                else
+                {
+                    count++;
+                    Log.i("Count",""+count);
+                }
+            }
+        }
+
+        listView.setSelection(count);
     }
 
     public ArrayList<String> getIds(){
@@ -52,7 +92,7 @@ public class ContactsFragment extends Fragment
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY+" COLLATE NOCASE");
 
         if (cursor.getCount() > 0) {
-            Log.i("Cursor Count", "" + cursor.getCount());
+           // Log.i("Cursor Count", "" + cursor.getCount());
             while (cursor.moveToNext()) {
 
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
