@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -50,7 +51,7 @@ public class ContactsFragment extends Fragment
     {
 
         String letterLower = letter.toLowerCase();
-
+        count = 0;
 
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI,
@@ -77,8 +78,14 @@ public class ContactsFragment extends Fragment
                 }
             }
         }
-
-        listView.setSelection(count);
+        if (count == contact_ids.size())
+        {
+            Toast.makeText(getActivity(),"No Contacts ",Toast.LENGTH_SHORT).show();
+            listView.setSelection(0);
+        }
+        else {
+            listView.setSelection(count);
+        }
     }
 
     public ArrayList<String> getIds(){
@@ -101,6 +108,8 @@ public class ContactsFragment extends Fragment
 
             }
         }
+
+//        Toast.makeText(getActivity(),""+idList.size(),Toast.LENGTH_SHORT).show();
         return idList;
     }
 }
