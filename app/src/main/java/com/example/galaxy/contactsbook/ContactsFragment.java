@@ -34,19 +34,27 @@ public class ContactsFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View contactsView = inflater.inflate(R.layout.contacts_fragment,container,false);
 
 
         contact_ids = getIds(query);
 
+        createListView(contactsView);
 //        for (int i = 0; i<contact_ids.size() ; i++ )
 //        {
 //            Log.i("ID ","id "+contact_ids.get(i));
 //        }
 
+        return contactsView;
+    }
+
+    public void createListView(View contactsView)
+    {
         ContactsAdapter adapter = new ContactsAdapter(getActivity(),contact_ids);
         listView = (ListView) contactsView.findViewById(R.id.contactList);
         listView.setAdapter(adapter);
+
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,9 +78,6 @@ public class ContactsFragment extends Fragment
                 }
             }
         });
-
-
-        return contactsView;
     }
 
     public void changePosition(String letter)
@@ -112,13 +117,22 @@ public class ContactsFragment extends Fragment
             listView.setSelection(0);
         }
         else {
-            listView.setSelection(count);
+            listView.smoothScrollToPosition(count);
         }
     }
 
     public void searchConatctsList(String query)
     {
         contact_ids = getIds(query);
+
+
+        if (contact_ids.size() > 0)
+        {
+            ContactsAdapter contactsAdapter = new ContactsAdapter(getActivity(),contact_ids);
+            listView.setAdapter(contactsAdapter);
+        }
+
+
 
     }
 
@@ -129,7 +143,7 @@ public class ContactsFragment extends Fragment
         ArrayList<String> idList = new ArrayList<String>();
         ContentResolver contentResolver = getActivity().getContentResolver();
         Cursor cursor = null;
-
+        String selection = ContactsContract.Contacts.DISPLAY_NAME_PRIMARY+" LIKE ?";
 
 
         if (query.equals(""))
@@ -138,21 +152,31 @@ public class ContactsFragment extends Fragment
         }
         else {
 
-//            String  = "%"+query+"%";
+            String selectionArgs[] = { "%"+query+"%" };
 
+            cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, selection, selectionArgs, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY+" COLLATE NOCASE");
 
         }
 
+
+
+
         if (cursor.getCount() > 0) {
             // Log.i("Cursor Count", "" + cursor.getCount());
+            idList.clear(); //clear arrayList
+
             while (cursor.moveToNext()) {
 
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
 
                 idList.add(id);
 
+//                Log.i("ID ",id);
 
             }
+        }
+        else {
+            Toast.makeText(getActivity(), "No Contacts Matching " + query, Toast.LENGTH_SHORT).show();
         }
 
 //        Toast.makeText(getActivity(),""+idList.size(),Toast.LENGTH_SHORT).show();

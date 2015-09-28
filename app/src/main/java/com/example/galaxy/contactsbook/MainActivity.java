@@ -79,7 +79,7 @@ public class MainActivity extends ActionBarActivity implements FilterFragment.Li
 
         if (contactsFragment !=null)
         {
-//            contactsFragment.searchConatctsList(query);
+            contactsFragment.searchConatctsList(query);
         }
     }
 }

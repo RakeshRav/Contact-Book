@@ -12,7 +12,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 /**
  * Created by galaxy on 24/09/15.
@@ -57,15 +56,15 @@ public class FilterFragment extends Fragment
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
-
+//                Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+                mCallback.searchContacts(query);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
 
-                Toast.makeText(getActivity(), newText, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), newText, Toast.LENGTH_SHORT).show();
                 mCallback.searchContacts(newText);
                 return false;
             }
