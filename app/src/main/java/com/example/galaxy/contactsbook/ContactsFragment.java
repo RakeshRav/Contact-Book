@@ -1,7 +1,9 @@
 package com.example.galaxy.contactsbook;
 
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
@@ -10,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,6 +26,7 @@ public class ContactsFragment extends Fragment
 {
 
     ArrayList<String> contact_ids;
+    String query ="";
 
     ListView listView;
     int count = 0;
@@ -32,7 +37,7 @@ public class ContactsFragment extends Fragment
         View contactsView = inflater.inflate(R.layout.contacts_fragment,container,false);
 
 
-        contact_ids = getIds();
+        contact_ids = getIds(query);
 
 //        for (int i = 0; i<contact_ids.size() ; i++ )
 //        {
@@ -42,6 +47,29 @@ public class ContactsFragment extends Fragment
         ContactsAdapter adapter = new ContactsAdapter(getActivity(),contact_ids);
         listView = (ListView) contactsView.findViewById(R.id.contactList);
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                TextView phNumber = (TextView) view.findViewById(R.id.contactNumber);
+                String data = "tel:" + phNumber.getText().toString();
+
+                if (!phNumber.getText().toString().equals("")) {
+                    Log.i("Number", data);
+
+                    //                String dummy = "tel:9694979945";
+                    Uri uri = Uri.parse(data);
+
+                    Intent intent = new Intent();
+                    intent.setAction(Intent.ACTION_DIAL);
+                    intent.setData(uri);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getActivity(), "No Contact Number Found", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
 
 
         return contactsView;
@@ -88,23 +116,41 @@ public class ContactsFragment extends Fragment
         }
     }
 
-    public ArrayList<String> getIds(){
+    public void searchConatctsList(String query)
+    {
+        contact_ids = getIds(query);
+
+    }
+
+
+    public ArrayList<String> getIds(String query){
+
         String str = "";
         ArrayList<String> idList = new ArrayList<String>();
-
-        ArrayList<String> names = new ArrayList<String>();
-
         ContentResolver contentResolver = getActivity().getContentResolver();
+        Cursor cursor = null;
 
-        Cursor cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY+" COLLATE NOCASE");
+
+
+        if (query.equals(""))
+        {
+            cursor = contentResolver.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, ContactsContract.Contacts.DISPLAY_NAME_PRIMARY+" COLLATE NOCASE");
+        }
+        else {
+
+//            String  = "%"+query+"%";
+
+
+        }
 
         if (cursor.getCount() > 0) {
-           // Log.i("Cursor Count", "" + cursor.getCount());
+            // Log.i("Cursor Count", "" + cursor.getCount());
             while (cursor.moveToNext()) {
 
                 String id = cursor.getString(cursor.getColumnIndex(ContactsContract.Contacts._ID));
 
                 idList.add(id);
+
 
             }
         }

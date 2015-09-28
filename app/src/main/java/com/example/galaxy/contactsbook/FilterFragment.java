@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 /**
  * Created by galaxy on 24/09/15.
@@ -31,7 +33,7 @@ public class FilterFragment extends Fragment
         ButtonAdapter adapter = new ButtonAdapter(getActivity());
         GridView gridView = (GridView) filterView.findViewById(R.id.gridView);
         gridView.setAdapter(adapter);
-        Log.i("gridView","adapter");
+        Log.i("gridView", "adapter");
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -42,7 +44,7 @@ public class FilterFragment extends Fragment
 //                Toast.makeText(getActivity(), id+ " Position clicked", Toast.LENGTH_SHORT).show();
 //                Log.i("Clicked", "hii");
 
-                Button button = (Button)view.findViewById(R.id.button_alpha);
+                Button button = (Button) view.findViewById(R.id.button_alpha);
                 String buttonText = button.getText().toString();
 //                Log.i("button Text",buttonText);
                 ((MainActivity) getActivity()).setActionBarTitle("Alphabet : " + buttonText);
@@ -51,12 +53,33 @@ public class FilterFragment extends Fragment
             }
         });
 
+        SearchView searchView = (SearchView) filterView.findViewById(R.id.searchView);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Toast.makeText(getActivity(), query, Toast.LENGTH_SHORT).show();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+
+                Toast.makeText(getActivity(), newText, Toast.LENGTH_SHORT).show();
+                mCallback.searchContacts(newText);
+                return false;
+            }
+        });
+
+
         return filterView;
     }
 
     public interface ListViewSelection
     {
         public void changeListPosition(String letter);
+
+        public void searchContacts(String query);
     }
 
     @Override

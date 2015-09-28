@@ -72,4 +72,14 @@ public class MainActivity extends ActionBarActivity implements FilterFragment.Li
             contactsFragment.changePosition(letter);
         }
     }
+
+    @Override
+    public void searchContacts(String query) {
+        ContactsFragment contactsFragment = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.contactsFragment);
+
+        if (contactsFragment !=null)
+        {
+//            contactsFragment.searchConatctsList(query);
+        }
+    }
 }
